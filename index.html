@@ -1,0 +1,39 @@
+<html>
+
+<head>
+    <title>D3 Parade</title>
+    <meta charset="utf-8" />
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="main_donut_vis.js"></script>
+    <script type="text/javascript" src="data_utils.js"></script>
+
+</head>
+
+<body style="text-align: center; background-color: #fbfbfb; margin-top: 50;">
+  <svg height="800" width="1200" class="mainVis"/>
+<script>
+
+  let textColor = "#484848";
+  let blackColor = "#000000";
+  let greyColor = "#dcdcdc";
+  let darkGreyColor = "#808080";
+
+  const getDataAndDrawVis = async() => {
+    let gitData = await d3.csv("git_data_filtered.csv");
+    gitData = gitData.filter(d => d["author"] != "dependabot[bot]");
+    console.log(gitData);
+
+    console.log(getFrequencyByKey(gitData, "year"));
+    console.log(getFrequencyByKey(gitData, "month"));
+    console.log(getFrequencyByKey(gitData, "author"));
+    console.log(getFrequencyByKey(gitData, "repo"));
+
+
+    drawDonut(".mainVis", gitData);
+  }
+
+  getDataAndDrawVis();
+
+</script>
+</body>
+</html>
