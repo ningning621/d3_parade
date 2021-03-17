@@ -23,6 +23,25 @@ function getFrequencyByKey(data, str, splitter="::", index = 0) {
   return sortedMap;
 }
 
+function calculateAmtOfContributions(data) {
+  let map = new Map();
+  for (var i = 0; i < data.length; i++) {
+      // let key = data[i]["month"]+"-"+data[i]["year"];
+      let key = data[i]["author"]
+      let commitCount = Number(data[i]["insertions"]) + Number(data[i]["deletions"]);
+      let insertionsCount = Number(data[i]["insertions"]);
+      let deletionCount = Number(data[i]["deletions"]);
+      if (!map.has(key)) {
+        map.set(key, commitCount);
+      } else {
+          map.set(key, map.get(key) + commitCount);
+      }
+  }
+
+  let sortedMap = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+  return sortedMap;
+}
+
 /* FUNCTIONS TO HANDLE TOOLTIP FUNCTIONALITY */
 
 function addTooltipToVis(className) {
@@ -42,8 +61,8 @@ function addTooltipToVis(className) {
 function updateToolTipText(tooltip, tooltipText, topOffset, leftOffset) {
   tooltip
     .html(tooltipText)
-    .style("font-family", "Montserrat")
-    .style("font-size", "12px")
+    .style("font-family", "Cabin")
+    .style("font-size", "14px")
     .style("visibility", "visible")
     .style("max-width", 150)
     .style("text-align", "left")

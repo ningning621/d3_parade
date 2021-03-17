@@ -6,27 +6,50 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="main_donut_vis.js"></script>
     <script type="text/javascript" src="data_utils.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
 </head>
 
 <body style="text-align: center; background-color: #fbfbfb; margin-top: 50;">
-  <svg height="800" width="1200" class="mainVis"/>
+  <h1 style="font-family: 'Ubuntu'; padding-top: 30px; padding-bottom:25px; text-align: center; font-size: 40px;">Celebrating 10 Years of D3.js 🎉</h1>
+  <div style="margin: 0 auto; width: 1000; font-family: 'Cabin'; font-size: 18; text-align: left;">
+  <p>D3.js version 1.0.0 was released on February 17, 2011, and continued to grow with support from the community. 
+    Now D3.js spans 30 different repositories on Github through an accumulation of 6889 commits from over 170 developers.
+  </p>
+  <p>Let's take a look at how D3.js has grown through the decade! </p>
+  </div>
+  <svg height="1000" width="1200" class="mainVis"/>
+  <footer>
+    <p style="font-family: 'Cabin'; font-size: 15px;">Built by <a href="https://twitter.com/NINGN418">Lesley</a> 📈👩‍💻📊</p>
+  </footer>
 <script>
+
+  //d3.js version 1.0.0 was released on February 17, 2011, and continued to grow with support from the community. Now d3 spans 30 different repositories on Github through an accumulation of 6889 commmits from over 170 developers.  
 
   let textColor = "#484848";
   let blackColor = "#000000";
   let greyColor = "#dcdcdc";
   let darkGreyColor = "#808080";
+  let purpleColor = "#dcb69f";
+  let selectionColor = purpleColor;
+  let dotColor = "#63acbe";
+  let whiteColor = "#ffffff";
+
+  let buttonSelection = "month";
+  let padding = 25;
 
   const getDataAndDrawVis = async() => {
     let gitData = await d3.csv("git_data_filtered.csv");
-    gitData = gitData.filter(d => d["author"] != "dependabot[bot]");
+    gitData = gitData
+      .filter(d => d["author"] != "dependabot[bot]")
+      .sort((a,b) => (b["insertions"] + b["deletions"]) - (a["insertions"] + a["deletions"]));
     console.log(gitData);
 
-    console.log(getFrequencyByKey(gitData, "year"));
-    console.log(getFrequencyByKey(gitData, "month"));
+    //console.log(getFrequencyByKey(gitData, "year"));
+    //console.log(getFrequencyByKey(gitData, "month"));
     console.log(getFrequencyByKey(gitData, "author"));
-    console.log(getFrequencyByKey(gitData, "repo"));
+    //console.log(getFrequencyByKey(gitData, "repo"));
+    console.log(calculateAmtOfContributions(gitData));
 
 
     drawDonut(".mainVis", gitData);
