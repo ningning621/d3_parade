@@ -302,28 +302,6 @@ function drawDonut(svgClass, data) {
     .attr("transform", "translate(" + centerX  + ", " + centerY + ")")
     .style("stroke-width", "2")
     .style("opacity", 1);
-  // add text about june commits
-  annotationContainer.append("text")
-    .attr("x", width/2 + padding*4)
-    .attr("y", height*0.85)
-    .text("June is the month with the most amount")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  annotationContainer.append("text")
-    .attr("x", width/2 + padding*4)
-    .attr("y", height*0.85+15)
-    .text("of commits pushed to d3 repos, making up")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  annotationContainer.append("text")
-    .attr("x", width/2 + padding*4)
-    .attr("y", height*0.85+30)
-    .text("more than 20% of all commits")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
   // add least commits arc 
   annotationContainer.append('path')
     .attr('d', d3.arc()
@@ -337,28 +315,7 @@ function drawDonut(svgClass, data) {
     .attr("transform", "translate(" + centerX  + ", " + centerY + ")")
     .style("stroke-width", "2")
     .style("opacity", 1);
-  // add september note
-  annotationContainer.append("text")
-    .attr("x", width/2 - padding*16)
-    .attr("y", height*0.55)
-    .text("September saw the least")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  annotationContainer.append("text")
-    .attr("x", width/2 - padding*16+10)
-    .attr("y", height*0.55+15)
-    .text("amount of commits, standing at")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  annotationContainer.append("text")
-    .attr("x", width/2 - padding*16+20)
-    .attr("y", height*0.55+30)
-    .text("only 177 total commits since 2013")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
+    addMonthText(annotationContainer, width, height);
   let monthData = createCommitsByMonthData();
   let monthx = d3.scaleBand()
     .domain(Object.keys(createFakePieData()))
