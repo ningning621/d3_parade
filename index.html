@@ -28,7 +28,6 @@
   </footer>
 <script>
 
-  //d3.js version 1.0.0 was released on February 17, 2011, and continued to grow with support from the community. Now d3 spans 30 different repositories on Github through an accumulation of 6889 commmits from over 170 developers.  
 
   let textColor = "#484848";
   let blackColor = "#000000";
@@ -50,12 +49,12 @@
     console.log(gitData);
 
     console.log(getFrequencyByKey(gitData, "year"));
-    //console.log(getFrequencyByKey(gitData, "month"));
+    console.log(getFrequencyByKey(gitData, "month"));
     // console.log(getFrequencyByKey(gitData, "author"));
     //console.log(getFrequencyByKey(gitData, "repo"));
     console.log(calculateAmtOfContributions(gitData, "author"));
-    console.log(calculateAmtOfContributions(gitData, "year"));
-    console.log(calculateAmtOfContributions(gitData, "repo"));
+    console.log(calculateAmtOfContributions(gitData, "month"));
+    // console.log(calculateAmtOfContributions(gitData, "repo"));
 
 
 

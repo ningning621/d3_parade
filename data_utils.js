@@ -3,13 +3,30 @@ function transformMonthDateToFraction(month, date) {
 }
 
 function createFakePieData() {
-  return {"Jan": 1, "Feb": 1, "Mar": 1, "Apr": 1, "May": 1, "Jun": 1,"July": 1,
+  return {"Jan": 1, "Feb": 1, "Mar": 1, "Apr": 1, "May": 1, "Jun": 1,"Jul": 1,
     "Aug": 1, "Sep": 1, "Oct": 1, "Nov": 1, "Dec": 1 };
 }
 
 function createContributionByYearData() {
   return [
     654, 14, 105947, 108651, 21317, 48838, 49733, 18825, 326
+  ];
+}
+
+function createCommitsByMonthData() {
+  return [
+    {"month": "Jan", "commits": 478},
+    {"month": "Feb", "commits": 539},
+    {"month": "Mar", "commits": 576},
+    {"month": "Apr", "commits": 470},
+    {"month": "May", "commits": 909},
+    {"month": "Jun", "commits": 1426},
+    {"month": "Jul", "commits": 392},
+    {"month": "Aug", "commits": 728},
+    {"month": "Sep", "commits": 177},
+    {"month": "Oct", "commits": 198},
+    {"month": "Nov", "commits": 638},
+    {"month": "Dec", "commits": 358}
   ];
 }
 
@@ -79,6 +96,8 @@ function updateToolTipText(tooltip, tooltipText, topOffset, leftOffset) {
 function hideTooltip(tooltip) {
   tooltip.style("visibility", "hidden");
 }
+
+/* FUNCTIONS TO DRAW TEXT */
 
 function addSmallTitleText(svg, x, y, textColor, textLst, isWeighted = false) {
   let counter = 0;

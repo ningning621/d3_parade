@@ -287,7 +287,8 @@ function drawDonut(svgClass, data) {
   /* MONTH ANNOTATIONS */
   let annotationContainer = svg.append("g")
     .attr("class", "annotations")
-    .attr("id", "monthAnnotations");
+    .attr("id", "monthAnnotations")
+    .style("pointer-event", "auto");
   // add most commits arc
   annotationContainer.append('path')
     .attr('d', d3.arc()
@@ -358,13 +359,67 @@ function drawDonut(svgClass, data) {
     .style("text-anchor", "end")
     .style("font-size", 14)
     .style("font-family", "Cabin");
+  let monthData = createCommitsByMonthData();
+  let monthx = d3.scaleBand()
+    .domain(Object.keys(createFakePieData()))
+    .range([padding*2.75, 300])
+    .padding(0.1);
+  let monthy = d3.scaleLinear()
+    .domain([0, 1500])
+    .range([height*0.97, height*0.85]);
+  annotationContainer.append("g")
+    .attr("transform", "translate(0," + height*0.98 + ")")
+    .call(d3.axisBottom(monthx))
+    .call(g => g.select(".domain").remove())
+    .style("font-family", "Cabin");
+  annotationContainer.append("g")
+    .attr("transform", "translate("+ padding*2.5+"," + 0 + ")")
+    .call(d3.axisLeft(monthy).tickFormat(d3.format("d")))
+    .call(g => g.select(".domain").remove())
+    .style("font-family", "Cabin");
+  let monthText = annotationContainer.append("text")
+    .style("font-family", "Cabin")
+    .style("font-size", 10)
+    .style("font-weight", "bold")
+    .style("text-anchor", "middle");
 
+  annotationContainer.selectAll(".bars")
+    .data(monthData)
+    .enter()
+    .append("rect")
+      .attr("id", d => "rect_" + d["month"])
+      .attr("x", d => monthx(d["month"]))
+      .attr("y", d => monthy(d["commits"]))
+      .attr("width", monthx.bandwidth())
+      .attr("height", d => monthy(0) - monthy(d["commits"]))
+      .style("fill", dotColor)
+    .on("mousemove", function(d) {
+      monthText.attr("x", monthx(d["month"])+monthx.bandwidth()/2)
+        .attr("y", monthy(d["commits"])-5)
+        .text(d["commits"])
+        .style("opacity", 1);
+
+      d3.select("#rect_" + d["month"])
+        .transition()
+        .duration(100)
+        .style("fill", darkGreyColor);
+    })
+    .on("mouseout", function(d) {
+      monthText.style("opacity", 0);
+      d3.select("#rect_" + d["month"])
+        .transition()
+        .duration(100)
+        .style("fill", dotColor);
+    });
+  
+  addSmallTitleText(annotationContainer, (padding*2.75)+(300-padding*2.75)/2, height*0.83, textColor, ["Commits Made By Month"], true);
 
   /* CONTRIBUTION ANNOTATIONS */
   let contContainer = svg.append("g")
     .attr("class", "annotations")
     .attr("id", "contributorsAnnotations")
-    .style("opacity", 0); 
+    .style("opacity", 0)
+    .style("pointer-events", "none"); 
   // draw arcs 
   drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
     6, 2015, purpleColor);
@@ -497,11 +552,13 @@ function drawButton(svg, className, x, y, width, height, strokeColor, fillColor,
       d3.selectAll(".annotations")
         .transition()
         .duration(400)
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("pointer-events", "none");
       d3.select("#" + text + "Annotations")
         .transition()
         .duration(400)
-        .style("opacity", 1);
+        .style("opacity", 1)
+        .style("pointer-events", "auto");
 
       buttonSelection = text;
 
@@ -540,11 +597,13 @@ function drawButton(svg, className, x, y, width, height, strokeColor, fillColor,
       d3.selectAll(".annotations")
         .transition()
         .duration(400)
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("pointer-events", "none");
       d3.select("#" + text + "Annotations")
         .transition()
         .duration(400)
-        .style("opacity", 1);
+        .style("opacity", 1)
+        .style("pointer-events", "auto");
 
       buttonSelection = text;
 

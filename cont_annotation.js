@@ -128,6 +128,8 @@ function addContributorLineAnnotation(contContainer, width, height, yearExtent) 
     .call(d3.axisLeft(conty).tickFormat(d3.format("d")).ticks(5))
     .call(g => g.select(".domain").remove())
     .style("font-family", "Cabin");
+
+  // overlay for mouseover
   let circle = contContainer.append("circle")
     .attr("r", 5)
     .style("opacity", 0)
@@ -137,7 +139,6 @@ function addContributorLineAnnotation(contContainer, width, height, yearExtent) 
     .style("font-weight", "bold")
     .style("opacity", 1)
     .style("font-size", 12);
-
   contContainer.append("rect")
     .datum(contData)
     .attr("x", padding*2.75)
