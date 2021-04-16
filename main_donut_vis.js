@@ -414,7 +414,12 @@ function handleDotTransition(svg, circleScale, isContribution = false) {
       .duration(800)
       .delay(function(d,i){ return 3*i;})
       .attr("r", 3);
-  }
+
+    svg.selectAll(".dots")
+      .transition()
+      .duration(500)
+      .style('fill', dotColor);
+    }
 }
 
 function drawColoredArc(svg, centerX, centerY, minYear, minRingSize, spaceBetweenRings, month, year, color, addPadding = false, isFilled = false) {
