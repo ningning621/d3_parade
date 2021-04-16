@@ -274,24 +274,26 @@ function drawDonut(svgClass, data) {
 
   // draw dots for legend
   let legendDots = [
-    {"x": width-padding*8, "y": padding*6},
-    {"x": width-padding*8-10, "y": padding*6-5},
-    {"x": width-padding*8-15, "y": padding*6-10},
-    {"x": width-padding*8-15, "y": padding*6-30},
-    {"x": width-padding*8-5, "y": padding*6+10},
-    {"x": width-padding*8+10, "y": padding*6+10},
-    {"x": width-padding*8+10, "y": padding*6-10},
-    {"x": width-padding*8-5, "y": padding*6-20},
-    {"x": width-padding*8+20, "y": padding*6+10}
+    {"x": width-padding*8, "y": padding*6, "r": 5},
+    {"x": width-padding*8-10, "y": padding*6-5, "r": 7},
+    {"x": width-padding*8-15, "y": padding*6-10, "r": 3},
+    {"x": width-padding*8-15, "y": padding*6-30, "r": 9},
+    {"x": width-padding*8-5, "y": padding*6+10, "r": 4},
+    {"x": width-padding*8+10, "y": padding*6+10, "r": 8},
+    {"x": width-padding*8+10, "y": padding*6-10, "r": 4},
+    {"x": width-padding*8-5, "y": padding*6-20, "r": 5},
+    {"x": width-padding*8+20, "y": padding*6+10, "r": 10}
   ];
   legendDots.forEach(function(d) {
     svg.append("circle")
+      .datum(d)
+      .attr("class", "legend_circles")
       .attr("cx", d.x)
       .attr("cy", d.y)
-      .attr("r", 2.5)
+      .attr("r", 3)
       .style("fill", dotColor)
       .style("opacity", 0.6)
-      .style("stroke", darkGreyColor);
+      .style("stroke", "none");
   });
 
   /* MONTH ANNOTATIONS */
@@ -403,18 +405,34 @@ function jitter() {
 
 function handleDotTransition(svg, circleScale, isContribution = false) {
   if (isContribution) {
+    // handle circles in legend
+    svg.selectAll(".legend_circles")
+      .transition()
+      .duration(500)
+      .delay(function(d,i){ return 10*i;})
+      .attr("r", d => d["r"]);
+
+    // handle circles in main plot
     svg.selectAll(".dots")
       .transition("dotTransition")
       .duration(150)
       .delay(function(d,i){ return 3*i;})
       .attr("r", d => circleScale(Number(d["insertions"]) + Number(d["deletions"])));
   } else {
+    // handle circles in legend
+    svg.selectAll(".legend_circles")
+      .transition()
+      .duration(500)
+      .attr("r", 3);
+
+    // handle circles in main plot
     svg.selectAll(".dots")
       .transition("dotTransition")
       .duration(800)
       .delay(function(d,i){ return 3*i;})
       .attr("r", 3);
 
+    // handle circle color in main plot
     svg.selectAll(".dots")
       .transition()
       .duration(500)
