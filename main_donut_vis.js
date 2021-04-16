@@ -39,7 +39,18 @@ function drawDonut(svgClass, data) {
       .attr("cy", centerY)
       .attr("r", minRingSize+(i-minYear)*spaceBetweenRings)
       .style("fill", "none")
-      .style("stroke", greyColor);
+      .style("stroke", greyColor)
+      .style("opacity", 0.8);
+    svg.append("text")
+      .attr("x", centerX)
+      .attr("y", centerY)
+      .text(i)
+      .attr("transform", "translate("+ (-1*(minRingSize+(i-minYear)*spaceBetweenRings)-(spaceBetweenRings/2)) + "," + -2 +")")
+      .style("font-family", "Cabin")
+      .style("fill", darkGreyColor)
+      .style("text-anchor", "middle")
+      .style("opacity", 0.8)
+      .style("font-size", "8px");
   }
 
   // draw outer ring for labels
@@ -48,16 +59,15 @@ function drawDonut(svgClass, data) {
     .attr("cy", centerY)
     .attr("r", minRingSize+(maxYear-minYear+1)*spaceBetweenRings+10)
     .style("fill", "none")
-    .style("stroke", blackColor);
+    .style("stroke", blackColor)
+    .style("opacity", 0.8);
 
 
   // referenced this to draw a guidelines for months:
   // https://www.d3-graph-gallery.com/graph/donut_basic.html
   let fakePieData = createFakePieData();
-  let pie = d3.pie()
-    .value(function(d) {return d.value; })
+  let pie = d3.pie().value(function(d) {return d.value; })
 
-  // TODO add labels for year
   const arcs = pie(d3.entries(fakePieData));
   svg.selectAll('.treeRingOutline')
     .data(arcs)
@@ -71,7 +81,7 @@ function drawDonut(svgClass, data) {
     .attr("stroke", greyColor)
     .attr("transform", "translate(" + centerX  + ", " + centerY + ")")
     .style("stroke-width", "2")
-    .style("opacity", 0.4);
+    .style("opacity", 0.3);
   
   // referenced this site to display text labels on an arc:
   // https://observablehq.com/@d3/donut-chart
@@ -92,8 +102,8 @@ function drawDonut(svgClass, data) {
           text.append("tspan")
             .text(function(d) { return d.data.key; })
         );
-
-  // draw dots on main tree ring
+  
+  // draw dots on main ring
   // took inspiration from here for graphing in polar coordinates:
   // https://stackoverflow.com/questions/33695073/javascript-polar-scatter-plot-using-d3-js
   svg.selectAll(".dots")
@@ -119,7 +129,7 @@ function drawDonut(svgClass, data) {
         .duration(200)
         .style("opacity", 1)
         .attr("r", function() {
-          if (buttonSelection == "contribution") {
+          if (buttonSelection == "contributors") {
             return circleScale(Number(d["insertions"]) + Number(d["deletions"])+2);
           } else {
             return 4;
@@ -142,7 +152,7 @@ function drawDonut(svgClass, data) {
         .duration(200)
         .style("opacity", 0.6)
         .attr("r", function() {
-          if (buttonSelection == "contribution") {
+          if (buttonSelection == "contributors") {
             return circleScale(Number(d["insertions"]) + Number(d["deletions"]));
           } else {
             return 3
@@ -163,7 +173,7 @@ function drawDonut(svgClass, data) {
     .style("font-family", "Cabin")
     .style("font-size", "16px");
   drawButton(svg, "monthButton", 2, width*0.25, 125, 50, greyColor, whiteColor, "month", circleScale);
-  drawButton(svg, "contributionButton", 2, width*0.25 + 50 + 10, 125, 50, greyColor, whiteColor, "contribution", circleScale);
+  drawButton(svg, "contributionButton", 2, width*0.25 + 50 + 10, 125, 50, greyColor, whiteColor, "contributors", circleScale);
   // drawButton(svg, "repoButton", 2, width*0.25 + 100 + 20, 125, 50, greyColor, whiteColor, "repository", circleScale);
 
   /* STATIC ANNOTATIONS FOR LEGEND*/
@@ -353,7 +363,7 @@ function drawDonut(svgClass, data) {
   /* CONTRIBUTION ANNOTATIONS */
   let contContainer = svg.append("g")
     .attr("class", "annotations")
-    .attr("id", "contributionAnnotations")
+    .attr("id", "contributorsAnnotations")
     .style("opacity", 0); 
   // draw arcs 
   drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
@@ -362,6 +372,7 @@ function drawDonut(svgClass, data) {
     8, 2018, purpleColor, addPadding = true);
   drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
     8, 2019, purpleColor, addingPadding = true);
+  // add annotation for june 
   contContainer.append('path')
     .attr('d', d3.arc()
       .startAngle(Number(transformMonthDateToFraction(6, 1))/12*(2*Math.PI))
@@ -374,20 +385,6 @@ function drawDonut(svgClass, data) {
     .attr("transform", "translate(" + centerX  + ", " + centerY + ")")
     .style("stroke-width", "2")
     .style("opacity", 1);
-  contContainer.append("text")
-    .attr("x", width/2 + padding*4)
-    .attr("y", height*0.85)
-    .text("June 2015 had the most amount of commits made,")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", width/2 + padding*4)
-    .attr("y", height*0.85+15)
-    .text("with 778 commits and 39163 lines changed")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
   // add annotation for august 2018
   contContainer.append('path')
     .attr('d', d3.arc()
@@ -401,86 +398,33 @@ function drawDonut(svgClass, data) {
     .attr("transform", "translate(" + centerX  + ", " + centerY + ")")
     .style("stroke-width", "2")
     .style("opacity", 1);
-  contContainer.append("text")
-    .attr("x", width*0.22)
-    .attr("y", height*0.7)
-    .text("August 2018 had the most")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", width*0.22+10)
-    .attr("y", height*0.7+15)
-    .text("amount of lines of code added")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", width*0.22+20)
-    .attr("y", height*0.7+30)
-    .text("to d3 repos (34020 lines), and")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", width*0.22+30)
-    .attr("y", height*0.7+45)
-    .text("August 2019 saw the most amount")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", width*0.22+40)
-    .attr("y", height*0.7+60)
-    .text("of deletions (10909 lines)")
-    .style("text-anchor", "end")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  // button note text
-  contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43)
-    .text("*Dot radius represents")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43+15)
-    .text("number of lines changed")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  // add mike shout out
-  contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43+45)
-    .text("→ shout out to Mike Bostock")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43+60)
-    .text("for contributing almost")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43+75)
-    .text("87% of total commits, with")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
-  contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43+90)
-    .text("329,153 lines of code changes")
-    .style("text-anchor", "start")
-    .style("font-size", 14)
-    .style("font-family", "Cabin");
+  
+  addContributorText(contContainer, width, height);
+  addContributorLineAnnotation(contContainer, width, height, yearExtent);
+}
+
+function getYearFromEvent(eventX, data) {
+  let segmentSize = (300-padding*2.75)/8;
+  let list = [];
+  let counter = 2013;
+  for (var i = padding*2.75; i<= 300; i+=segmentSize) {
+    list.push({"year": counter, "pxloc": i});
+    counter++;
   }
+  let year = 2013;
+  list.reduce((a, b) => {
+    var isLarger = Math.abs(b["pxloc"] - eventX) < Math.abs(a["pxloc"] - eventX);
+
+    if (isLarger) {
+      year = b["year"];
+      return b;
+    } 
+    
+    year = a["year"];
+    return a;
+  });
+  return year;
+}
 
 function jitter() {
   return (Math.floor(Math.random() * (10 - 1 + 1) + 1)) / 10;
@@ -562,7 +506,7 @@ function drawButton(svg, className, x, y, width, height, strokeColor, fillColor,
       buttonSelection = text;
 
       // handle circle transition
-      if (text == "contribution") {
+      if (text == "contributors") {
         handleDotTransition(svg, circleScale, true);
       } else {
         handleDotTransition(svg, circleScale, false);
@@ -605,10 +549,11 @@ function drawButton(svg, className, x, y, width, height, strokeColor, fillColor,
       buttonSelection = text;
 
       // handle circle transition
-      if (text == "contribution") {
+      if (text == "contributors") {
         handleDotTransition(svg, circleScale, true);
       } else {
         handleDotTransition(svg, circleScale, false);
       }
     });
 }
+

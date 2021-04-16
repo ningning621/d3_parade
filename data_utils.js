@@ -7,6 +7,12 @@ function createFakePieData() {
     "Aug": 1, "Sep": 1, "Oct": 1, "Nov": 1, "Dec": 1 };
 }
 
+function createContributionByYearData() {
+  return [
+    654, 14, 105947, 108651, 21317, 48838, 49733, 18825, 326
+  ];
+}
+
 function getFrequencyByKey(data, str, splitter="::", index = 0) {
   let map = new Map();
   for (var i = 0; i < data.length; i++) {
@@ -23,11 +29,11 @@ function getFrequencyByKey(data, str, splitter="::", index = 0) {
   return sortedMap;
 }
 
-function calculateAmtOfContributions(data) {
+function calculateAmtOfContributions(data, mapKey) {
   let map = new Map();
   for (var i = 0; i < data.length; i++) {
       // let key = data[i]["month"]+"-"+data[i]["year"];
-      let key = data[i]["author"]
+      let key = data[i][mapKey]
       let commitCount = Number(data[i]["insertions"]) + Number(data[i]["deletions"]);
       let insertionsCount = Number(data[i]["insertions"]);
       let deletionCount = Number(data[i]["deletions"]);
@@ -72,4 +78,22 @@ function updateToolTipText(tooltip, tooltipText, topOffset, leftOffset) {
 
 function hideTooltip(tooltip) {
   tooltip.style("visibility", "hidden");
+}
+
+function addSmallTitleText(svg, x, y, textColor, textLst, isWeighted = false) {
+  let counter = 0;
+  for (var text of textLst) {
+    svg.append("text")
+      .attr("x", x)
+      .attr("y", y+15*counter)
+      .text(text)
+      .attr("transform", "translate(-2.5, -2.5)")
+      .style("font-family", "Ubuntu")
+      .style("text-anchor", "middle")
+      .style("font-size", 12)
+      .style("font-weight", isWeighted ? "bold" : "normal")
+      .style("fill", textColor);
+      
+    counter = counter + 1;
+  }
 }
