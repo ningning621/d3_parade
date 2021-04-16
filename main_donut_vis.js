@@ -111,6 +111,14 @@ function drawDonut(svgClass, data) {
     .enter()
     .append("circle")
     .attr("class", "dots")
+    // .attr("id", d => { (d["author"] == "Mike Bostock") ? "is_mike" : "is_not_mike"})
+    .attr("id", function(d) {
+      if (d["author"] == "Mike Bostock") {
+        return "is_mike";
+      } else {
+        return "is_not_mike";
+      }
+    })
     .attr("cx", centerX)
     .attr("cy", centerY)
     .attr("r", function(d) {
@@ -137,11 +145,13 @@ function drawDonut(svgClass, data) {
         });
 
       // update tooltip
-      var tooltipText = "<b>author:</b> " + d.author
+      var tooltipText = "<b>" + d.subject + "</b>"
+        + "<br/><br/> <b>author:</b> " + d.author
         + "<br/> <b>date:</b> " + d.month + "." + d.date + "." + d.year
         + "<br/> <b>repo:</b> " + d.repo
-        + "<br/> <b>insertions:</b> " + d.insertions
-        + "<br/> <b>deletions:</b> " + d.deletions;
+        + "<br/> <b>changes:</b> " + d.insertions + " +, " + d.deletions + " -";
+        // + "<br/> <b>insertions:</b> " + d.insertions
+        // + "<br/> <b>deletions:</b> " + d.deletions;
 
       updateToolTipText(tooltip, tooltipText, -20, 110);
     })
@@ -315,61 +325,9 @@ function drawDonut(svgClass, data) {
     .attr("transform", "translate(" + centerX  + ", " + centerY + ")")
     .style("stroke-width", "2")
     .style("opacity", 1);
-    addMonthText(annotationContainer, width, height);
-  let monthData = createCommitsByMonthData();
-  let monthx = d3.scaleBand()
-    .domain(Object.keys(createFakePieData()))
-    .range([padding*2.75, 300])
-    .padding(0.1);
-  let monthy = d3.scaleLinear()
-    .domain([0, 1500])
-    .range([height*0.97, height*0.85]);
-  annotationContainer.append("g")
-    .attr("transform", "translate(0," + height*0.98 + ")")
-    .call(d3.axisBottom(monthx))
-    .call(g => g.select(".domain").remove())
-    .style("font-family", "Cabin");
-  annotationContainer.append("g")
-    .attr("transform", "translate("+ padding*2.5+"," + 0 + ")")
-    .call(d3.axisLeft(monthy).tickFormat(d3.format("d")))
-    .call(g => g.select(".domain").remove())
-    .style("font-family", "Cabin");
-  let monthText = annotationContainer.append("text")
-    .style("font-family", "Cabin")
-    .style("font-size", 10)
-    .style("font-weight", "bold")
-    .style("text-anchor", "middle");
 
-  annotationContainer.selectAll(".bars")
-    .data(monthData)
-    .enter()
-    .append("rect")
-      .attr("id", d => "rect_" + d["month"])
-      .attr("x", d => monthx(d["month"]))
-      .attr("y", d => monthy(d["commits"]))
-      .attr("width", monthx.bandwidth())
-      .attr("height", d => monthy(0) - monthy(d["commits"]))
-      .style("fill", dotColor)
-    .on("mousemove", function(d) {
-      monthText.attr("x", monthx(d["month"])+monthx.bandwidth()/2)
-        .attr("y", monthy(d["commits"])-5)
-        .text(d["commits"])
-        .style("opacity", 1);
-
-      d3.select("#rect_" + d["month"])
-        .transition()
-        .duration(100)
-        .style("fill", darkGreyColor);
-    })
-    .on("mouseout", function(d) {
-      monthText.style("opacity", 0);
-      d3.select("#rect_" + d["month"])
-        .transition()
-        .duration(100)
-        .style("fill", dotColor);
-    });
-  
-  addSmallTitleText(annotationContainer, (padding*2.75)+(300-padding*2.75)/2, height*0.83, textColor, ["Commits Made By Month"], true);
+  addMonthText(annotationContainer, width, height);
+  addMonthBarAnnotation(annotationContainer, height);
 
   /* CONTRIBUTION ANNOTATIONS */
   let contContainer = svg.append("g")
@@ -412,6 +370,7 @@ function drawDonut(svgClass, data) {
     .style("opacity", 1);
   
   addContributorText(contContainer, width, height);
+  addMikeToggle(contContainer, width, height)
   addContributorLineAnnotation(contContainer, width, height, yearExtent);
 }
 

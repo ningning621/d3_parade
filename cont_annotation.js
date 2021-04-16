@@ -162,3 +162,48 @@ function addContributorLineAnnotation(contContainer, width, height, yearExtent) 
 
   addSmallTitleText(contContainer, (padding*2.75)+(300-padding*2.75)/2, height*0.83, textColor, ["Amount of Lines Changed by Year"], true);
 }
+
+function addMikeToggle(contContainer, width, height) {
+  let isClicked = false;
+  contContainer.append("circle")
+    .attr("cx", 10)
+    .attr("cy", height*0.55)
+    .attr("r", 7)
+    .style("fill", "#fbfbfb")
+    .style("stroke", darkGreyColor)
+    .style("stroke-width", 2)
+    .on("click", function() {
+      isClicked = !isClicked;
+      if (isClicked) {
+        d3.selectAll("#is_mike")
+          .transition()
+          .duration(500)
+          .style("fill", highlightColor);
+
+        // handle toggle click
+        d3.select(this) 
+          .transition()
+          .duration(200)
+          .style("fill", highlightColor);
+      } else {
+        d3.selectAll("#is_mike")
+          .transition()
+          .duration(500)
+          .style("fill", dotColor);
+
+        // handle toggle click
+        d3.select(this) 
+          .transition()
+          .duration(200)
+          .style("fill", "#fbfbfb");
+      }
+    });
+
+  contContainer.append("text")
+    .attr("x", 27)
+    .attr("y", height*0.55)
+    .text("toggle for Mike's contributions")
+    .style("font-size", 14)
+    .style("alignment-baseline", "middle")
+    .style("font-family", "Cabin");
+}
