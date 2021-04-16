@@ -54,18 +54,18 @@ function addContributorText(contContainer, width, height) {
   
   // button note text
   contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43)
+    .attr("x", width*0.71)
+    .attr("y", height*0.14)
     .text("*Dot radius represents")
     .style("text-anchor", "start")
-    .style("font-size", 14)
+    .style("font-size", 12)
     .style("font-family", "Cabin");
   contContainer.append("text")
-    .attr("x", 10)
-    .attr("y", height*0.43+15)
+    .attr("x", width*0.71)
+    .attr("y", height*0.14+15)
     .text("number of lines changed")
     .style("text-anchor", "start")
-    .style("font-size", 14)
+    .style("font-size", 12)
     .style("font-family", "Cabin");
   
   // add mike shout out
