@@ -164,8 +164,8 @@ function addContributorLineAnnotation(contContainer, width, height, yearExtent) 
 }
 
 function addMikeToggle(contContainer, width, height) {
-  let isClicked = false;
   contContainer.append("circle")
+    .attr("id", "toggle")
     .attr("cx", 10)
     .attr("cy", height*0.55)
     .attr("r", 7)
@@ -173,11 +173,11 @@ function addMikeToggle(contContainer, width, height) {
     .style("stroke", darkGreyColor)
     .style("stroke-width", 2)
     .on("click", function() {
-      isClicked = !isClicked;
-      if (isClicked) {
+      isMike = !isMike;
+      if (isMike) {
         d3.selectAll("#is_mike")
           .transition()
-          .duration(500)
+          .duration(800)
           .style("fill", highlightColor);
 
         // handle toggle click
@@ -188,7 +188,7 @@ function addMikeToggle(contContainer, width, height) {
       } else {
         d3.selectAll("#is_mike")
           .transition()
-          .duration(500)
+          .duration(800)
           .style("fill", dotColor);
 
         // handle toggle click

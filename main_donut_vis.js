@@ -424,6 +424,8 @@ function handleDotTransition(svg, circleScale, isContribution = false) {
       .transition()
       .duration(500)
       .attr("r", 3);
+    svg.select("#toggle").style("fill", "#fbfbfb");
+    isMike = false;
 
     // handle circles in main plot
     svg.selectAll(".dots")
@@ -435,7 +437,7 @@ function handleDotTransition(svg, circleScale, isContribution = false) {
     // handle circle color in main plot
     svg.selectAll(".dots")
       .transition()
-      .duration(500)
+      .duration(800)
       .style('fill', dotColor);
     }
 }
