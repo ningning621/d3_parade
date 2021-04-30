@@ -32,6 +32,25 @@ function drawDonut(svgClass, data) {
     .domain(contributionExtent)
     .range([2, 30]);
 
+  svg.append("text")
+    .attr("x", 5)
+    .attr("y", padding*1.75)
+    .text("10 Years of D3")
+    // .style("text-transform", "uppercase")
+    .style("text-anchor", "start")
+    .style("font-weight", "bold")
+    .style("font-family", "Ubuntu")
+    .style("font-size", "50px");
+  svg.append("text")
+    .attr("x", 10)
+    .attr("y", padding*3)
+    .text("A closer look at D3.js Git repositories")
+    // .style("text-transform", "uppercase")
+    .style("text-anchor", "start")
+    // .style("font-weight", "bold")
+    .style("font-family", "Ubuntu")
+    .style("font-size", "25px");
+
   // draw concentric rings
   for (var i = minYear; i < maxYear+1; i++) {
     svg.append("circle")
@@ -329,7 +348,7 @@ function drawDonut(svgClass, data) {
     .style("opacity", 1);
 
   addMonthText(annotationContainer, width, height);
-  addMonthBarAnnotation(annotationContainer, height);
+  // addMonthBarAnnotation(annotationContainer, height);
 
   /* CONTRIBUTION ANNOTATIONS */
   let contContainer = svg.append("g")
@@ -338,12 +357,12 @@ function drawDonut(svgClass, data) {
     .style("opacity", 0)
     .style("pointer-events", "none"); 
   // draw arcs 
-  drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
-    6, 2015, purpleColor);
-  drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
-    8, 2018, purpleColor, addPadding = true);
-  drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
-    8, 2019, purpleColor, addingPadding = true);
+  // drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
+  //   6, 2015, purpleColor);
+  // drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
+  //   8, 2018, purpleColor, addPadding = true);
+  // drawColoredArc(contContainer, centerX, centerY, minYear, minRingSize, spaceBetweenRings, 
+  //   8, 2019, purpleColor, addingPadding = true);
   // add annotation for june 
   contContainer.append('path')
     .attr('d', d3.arc()
@@ -373,7 +392,7 @@ function drawDonut(svgClass, data) {
   
   addContributorText(contContainer, width, height);
   addMikeToggle(contContainer, width, height)
-  addContributorLineAnnotation(contContainer, width, height, yearExtent);
+  // addContributorLineAnnotation(contContainer, width, height, yearExtent);
 }
 
 function getYearFromEvent(eventX, data) {
@@ -416,7 +435,7 @@ function handleDotTransition(svg, circleScale, isContribution = false) {
     svg.selectAll(".dots")
       .transition("dotTransition")
       .duration(150)
-      .delay(function(d,i){ return 3*i;})
+      .delay(function(d,i){ return 5*i;})
       .attr("r", d => circleScale(Number(d["insertions"]) + Number(d["deletions"])));
   } else {
     // handle circles in legend
@@ -431,13 +450,13 @@ function handleDotTransition(svg, circleScale, isContribution = false) {
     svg.selectAll(".dots")
       .transition("dotTransition")
       .duration(800)
-      .delay(function(d,i){ return 3*i;})
+      .delay(function(d,i){ return 5*i;})
       .attr("r", 3);
 
     // handle circle color in main plot
     svg.selectAll(".dots")
       .transition()
-      .duration(800)
+      .duration(1000)
       .style('fill', dotColor);
     }
 }
