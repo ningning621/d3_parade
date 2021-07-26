@@ -1,4 +1,4 @@
-# D3 Parade
+# D3 Parade Data Visualization
 
 Celebrating 10 years of D3.js through an exploration of D3 Github repositories (2013-2021)
 
